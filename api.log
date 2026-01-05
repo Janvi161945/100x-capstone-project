@@ -1,0 +1,33 @@
+INFO:     Started server process [56449]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+============================================================
+Starting Learning Planner API with Ollama
+============================================================
+Model: llama3.2
+Ollama URL: http://localhost:11434
+
+Make sure Ollama is running:
+  1. ollama serve
+  2. ollama pull llama3.2
+
+API will be available at: http://localhost:8000
+API docs: http://localhost:8000/docs
+============================================================
+
+INFO:     127.0.0.1:51220 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51234 - "GET /api/onboarding/step1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59694 - "OPTIONS /api/onboarding/step2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59694 - "POST /api/onboarding/step2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43300 - "GET /api/onboarding/step1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43300 - "POST /api/onboarding/step2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47480 - "GET /api/onboarding/step3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36620 - "OPTIONS /api/onboarding/generate-plan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36620 - "POST /api/onboarding/generate-plan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54876 - "GET /api/onboarding/step1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46826 - "OPTIONS /api/onboarding/step2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46826 - "POST /api/onboarding/step2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59550 - "GET /api/onboarding/step3 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59550 - "OPTIONS /api/onboarding/generate-plan HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59550 - "POST /api/onboarding/generate-plan HTTP/1.1" 200 OK

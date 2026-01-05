@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning Journey - AI Planner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .progress-overview {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .days-container {
+            display: grid;
+            gap: 20px;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .day-card.completed {
+            border-color: #4caf50;
+            opacity: 0.9;
+        }
+
+        .day-card.current {
+            border-color: #667eea;
+            transform: scale(1.02);
+        }
+
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .day-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .day-card.completed .day-number {
+            background: #4caf50;
+        }
+
+        .day-title {
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .day-title h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .time-badge {
+            background: #f8f9ff;
+            color: #667eea;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .day-content {
+            margin-bottom: 20px;
+        }
+
+        .content-section {
+            margin-bottom: 15px;
+        }
+
+        .content-section h3 {
+            color: #667eea;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .content-section p {
+            color: #555;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        .day-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-complete {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-complete:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .btn-completed {
+            background: #e8f5e9;
+            color: #4caf50;
+            cursor: default;
+        }
+
+        .btn-start {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-start:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .completion-badge {
+            background: #4caf50;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: white;
+            color: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            background: white;
+            border-radius: 20px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .empty-state h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .progress-stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .day-card {
+                padding: 20px;
+            }
+
+            .day-header {
+                flex-wrap: wrap;
+            }
+
+            .day-title {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+        }
+
+        .celebration {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .celebration h2 {
+            color: #4caf50;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .celebration p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1 id="headerTitle">My 7-Day AI Learning Journey</h1>
+            <p id="headerSubtitle">Track your progress and complete each day's task</p>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="progress-overview">
+            <div class="progress-stats">
+                <div class="stat">
+                    <div class="stat-number" id="completedDays">0</div>
+                    <div class="stat-label">Days Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="currentDay">1</div>
+                    <div class="stat-label">Current Day</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="daysRemaining">7</div>
+                    <div class="stat-label">Days Remaining</div>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Days Container -->
+        <div id="daysContainer" class="days-container"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <h2>No Learning Plan Yet</h2>
+            <p>Create your personalized learning plan to start your AI journey!</p>
+            <button class="btn-primary" onclick="window.location.href='index.html'">Create Plan</button>
+        </div>
+
+        <!-- Celebration (shown when all days completed) -->
+        <div id="celebration" class="celebration" style="display: none;">
+            <h2>🎉 Congratulations!</h2>
+            <p>You've completed all 7 days of your AI learning journey!</p>
+            <button class="btn-primary" onclick="resetProgress()">Start New Plan</button>
+        </div>
+    </div>
+
+    <script>
+        // Load plan from localStorage
+        let learningPlan = [];
+        let completedDays = new Set();
+
+        function loadPlan() {
+            const planData = localStorage.getItem('learningPlan');
+            const completedData = localStorage.getItem('completedDays');
+
+            if (planData) {
+                learningPlan = JSON.parse(planData);
+                renderPlan();
+            } else {
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('daysContainer').style.display = 'none';
+                document.querySelector('.progress-overview').style.display = 'none';
+            }
+
+            if (completedData) {
+                completedDays = new Set(JSON.parse(completedData));
+                updateProgress();
+            }
+        }
+
+        function renderPlan() {
+            const container = document.getElementById('daysContainer');
+            container.innerHTML = '';
+
+            const currentDayNum = getCurrentDay();
+
+            learningPlan.forEach((day, index) => {
+                const isCompleted = completedDays.has(day.day);
+                const isCurrent = day.day === currentDayNum && !isCompleted;
+
+                const dayCard = document.createElement('div');
+                dayCard.className = `day-card ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`;
+                dayCard.innerHTML = `
+                    <div class="day-header">
+                        <div class="day-number">${day.day}</div>
+                        <div class="day-title">
+                            <h2>${day.title}</h2>
+                        </div>
+                        <div class="time-badge">${day.time_required}</div>
+                    </div>
+                    <div class="day-content">
+                        <div class="content-section">
+                            <h3>What You'll Learn</h3>
+                            <p>${day.what_to_learn}</p>
+                        </div>
+                        <div class="content-section">
+                            <h3>What To Do</h3>
+                            <p>${day.what_to_do}</p>
+                        </div>
+                    </div>
+                    <div class="day-actions">
+                        ${isCompleted ?
+                            `<div class="completion-badge">
+                                <div class="checkmark">✓</div>
+                                Completed
+                            </div>` :
+                            `<button class="btn ${isCurrent ? 'btn-start' : 'btn-complete'}" onclick="markComplete(${day.day})">
+                                ${isCurrent ? 'Start This Day' : 'Mark as Complete'}
+                            </button>`
+                        }
+                    </div>
+                `;
+                container.appendChild(dayCard);
+            });
+
+            updateProgress();
+        }
+
+        function getCurrentDay() {
+            for (let i = 1; i <= 7; i++) {
+                if (!completedDays.has(i)) {
+                    return i;
+                }
+            }
+            return 7;
+        }
+
+        function markComplete(dayNum) {
+            completedDays.add(dayNum);
+            localStorage.setItem('completedDays', JSON.stringify([...completedDays]));
+            renderPlan();
+
+            // Check if all days completed
+            if (completedDays.size === 7) {
+                setTimeout(() => {
+                    document.getElementById('daysContainer').style.display = 'none';
+                    document.querySelector('.progress-overview').style.display = 'none';
+                    document.getElementById('celebration').style.display = 'block';
+                }, 500);
+            }
+        }
+
+        function updateProgress() {
+            const completed = completedDays.size;
+            const current = getCurrentDay();
+            const remaining = 7 - completed;
+            const percentage = (completed / 7) * 100;
+
+            document.getElementById('completedDays').textContent = completed;
+            document.getElementById('currentDay').textContent = current;
+            document.getElementById('daysRemaining').textContent = remaining;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to start a new plan? This will reset your current progress.')) {
+                localStorage.removeItem('learningPlan');
+                localStorage.removeItem('completedDays');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Load plan on page load
+        loadPlan();
+    </script>
+</body>
+</html>
